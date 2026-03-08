@@ -244,8 +244,6 @@ def main():
 
         with st.chat_message("assistant"):
             st.markdown(resp.answer)
-            if not resp.used_openai:
-                st.caption("AI key not found or unavailable — showing a local (non-LLM) explanation.")
 
         st.session_state.chat_messages.append({"role": "assistant", "content": resp.answer})
 
