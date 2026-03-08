@@ -85,16 +85,36 @@ def _emissions_by_lane_bar(lane_df: pd.DataFrame):
 
 
 def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
+
+    if lane_df.empty:
+        return px.imshow([[0]], title="No data available")
+
     pivot = lane_df.pivot_table(
-        index="origin", columns="destination", values="carbon_intensity", aggfunc="mean"
+        index="origin",
+        columns="destination",
+        values="carbon_intensity",
+        aggfunc="mean"
     )
+    
+    pivot = pivot.fillna(0)
+
+    if pivot.shape[0] == 0 or pivot.shape[1] == 0:
+        return px.imshow([[0]], title="Insufficient data for heatmap")
+
     fig = px.imshow(
         pivot,
         aspect="auto",
+        color_continuous_scale="Reds",
         title="Carbon Intensity Heatmap (kg CO2 per tonne-km)",
-        labels=dict(color="kg CO2/tonne-km"),
+        labels=dict(color="kg CO2/tonne-km")
     )
-    fig.update_layout(height=450)
+
+    fig.update_layout(
+        height=450,
+        xaxis_title="Destination",
+        yaxis_title="Origin"
+    )
+
     return fig
 
 
