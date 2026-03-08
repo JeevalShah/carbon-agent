@@ -103,9 +103,7 @@ def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
     pivot = pd.DataFrame(pivot)
 
     fig = px.imshow(
-        pivot.values,
-        x=pivot.columns,
-        y=pivot.index,
+        pivot,
         aspect="auto",
         color_continuous_scale="Reds",
         title="Carbon Intensity Heatmap (kg CO2 per tonne-km)",
@@ -116,6 +114,10 @@ def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
         height=450,
         xaxis_title="Destination",
         yaxis_title="Origin"
+    )
+
+    fig.update_traces(
+        hovertemplate="Origin: %{y}<br>Destination: %{x}<br>Intensity: %{z:.4f}"
     )
 
     return fig
