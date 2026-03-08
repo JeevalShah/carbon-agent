@@ -257,8 +257,6 @@ def main():
     if st.button("Generate lane insight"):
         resp = generate_lane_insight(lane_row, user_query=f"Why is {lane_choice} a high emission lane?")
         st.markdown(resp.answer)
-        if not resp.used_openai:
-            st.caption("AI key not found or unavailable — showing a local (non-LLM) explanation.")
 
 
 if __name__ == "__main__":
