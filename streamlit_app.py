@@ -114,6 +114,53 @@ def _carbon_intensity_heatmap(lane_df):
 
     return fig
 
+def _optimization_impact_chart(res):
+
+    df = pd.DataFrame([
+        {"Scenario": "Baseline", "Emissions": res.baseline_emissions_kg},
+        {"Scenario": "Optimized", "Emissions": res.optimized_emissions_kg}
+    ])
+
+    reduction = res.baseline_emissions_kg - res.optimized_emissions_kg
+
+    fig = px.bar(
+        df,
+        x="Scenario",
+        y="Emissions",
+        color="Scenario",
+        title=f"Optimization Impact (Reduction: {reduction:,.0f} kg CO2)",
+        labels={"Emissions": "CO2 Emissions (kg)"}
+    )
+
+    fig.update_layout(height=400)
+
+    return fig
+
+def _carbon_intensity_lane_chart(lane_df: pd.DataFrame):
+
+    df = lane_df.sort_values("carbon_intensity", ascending=False).head(15)
+
+    fig = px.bar(
+        df,
+        x="carbon_intensity",
+        y="lane",
+        orientation="h",
+        color="carbon_intensity",
+        color_continuous_scale="Reds",
+        title="Top 15 Lanes by Carbon Intensity",
+        labels={
+            "carbon_intensity": "kg CO2 per tonne-km",
+            "lane": "Lane"
+        }
+    )
+
+    fig.update_layout(
+        height=450,
+        yaxis=dict(autorange="reversed")
+    )
+
+    return fig
+
 def _hotspot_table(lane_df: pd.DataFrame):
     hs = lane_df[lane_df["carbon_hotspot"] == True].copy()  # noqa: E712
     hs = hs.sort_values(["anomaly_score", "total_emissions_per_lane"], ascending=False)
@@ -175,7 +222,7 @@ def main():
     with left:
         st.plotly_chart(_emissions_by_lane_bar(lane_df), use_container_width=True)
     with right:
-        fig = _carbon_intensity_heatmap(lane_df)
+        fig = _carbon_intensity_lane_chart(lane_df)
         st.plotly_chart(fig, use_container_width=True)
 
     st.write(lane_df.shape)
@@ -212,18 +259,7 @@ def main():
                 "percentage_reduction": round(res.percentage_reduction, 2),
             }
         )
-        fig = px.bar(
-            pd.DataFrame(
-                [
-                    {"case": "Baseline", "emissions_kg": res.baseline_emissions_kg},
-                    {"case": "Optimized", "emissions_kg": res.optimized_emissions_kg},
-                ]
-            ),
-            x="case",
-            y="emissions_kg",
-            title="Baseline vs Optimized Emissions",
-            labels={"emissions_kg": "CO2 (kg)"},
-        )
+        fig = _optimization_impact_chart(res)
         st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
