@@ -83,8 +83,7 @@ def _emissions_by_lane_bar(lane_df: pd.DataFrame):
     fig.update_layout(xaxis_tickangle=-45, height=450)
     return fig
 
-
-def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
+def _carbon_intensity_heatmap(lane_df):
 
     if lane_df.empty:
         return px.imshow([[0]], title="No data available")
@@ -93,14 +92,11 @@ def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
         index="origin",
         columns="destination",
         values="carbon_intensity",
-        aggfunc="mean",
-        fill_value=0
+        aggfunc="mean"
     )
 
-    if pivot.shape[0] == 0 or pivot.shape[1] == 0:
+    if pivot.empty:
         return px.imshow([[0]], title="Insufficient data")
-
-    pivot = pd.DataFrame(pivot)
 
     fig = px.imshow(
         pivot,
@@ -114,10 +110,6 @@ def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
         height=450,
         xaxis_title="Destination",
         yaxis_title="Origin"
-    )
-
-    fig.update_traces(
-        hovertemplate="Origin: %{y}<br>Destination: %{x}<br>Intensity: %{z:.4f}"
     )
 
     return fig
