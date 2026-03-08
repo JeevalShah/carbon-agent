@@ -5,3 +5,5 @@ streamlit
 plotly
 openai
 google-generativeai
+altair<5
+filetype
