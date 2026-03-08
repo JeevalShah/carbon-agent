@@ -1,7 +1,7 @@
 pandas
 numpy
 scikit-learn
-streamlit
+streamlit==1.32.2
 plotly
 openai
 google-generativeai
