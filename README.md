@@ -29,14 +29,6 @@ pip install -r requirements.txt
 
 ### (Optional) Enable GenAI
 
-You can use either OpenAI or Gemini. If neither key is set, the app still works and shows a deterministic non-LLM explanation.
-
-- **OpenAI (optional)** — PowerShell:
-
-```bash
-$env:OPENAI_API_KEY="YOUR_OPENAI_KEY_HERE"
-```
-
 - **Gemini (Google) (optional)** — PowerShell:
 
 ```bash
@@ -50,7 +42,7 @@ $env:GOOGLE_API_KEY="YOUR_GEMINI_KEY_HERE"
 Launch the dashboard:
 
 ```bash
-streamlit run carbon_tracker/dashboard/streamlit_app.py
+streamlit run carbon_tracker/streamlit_app.py
 ```
 
 Run the pipeline from CLI (quick sanity check):

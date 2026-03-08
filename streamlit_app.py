@@ -93,16 +93,19 @@ def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
         index="origin",
         columns="destination",
         values="carbon_intensity",
-        aggfunc="mean"
+        aggfunc="mean",
+        fill_value=0
     )
-    
-    pivot = pivot.fillna(0)
 
     if pivot.shape[0] == 0 or pivot.shape[1] == 0:
-        return px.imshow([[0]], title="Insufficient data for heatmap")
+        return px.imshow([[0]], title="Insufficient data")
+
+    pivot = pd.DataFrame(pivot)
 
     fig = px.imshow(
-        pivot,
+        pivot.values,
+        x=pivot.columns,
+        y=pivot.index,
         aspect="auto",
         color_continuous_scale="Reds",
         title="Carbon Intensity Heatmap (kg CO2 per tonne-km)",
@@ -116,7 +119,6 @@ def _carbon_intensity_heatmap(lane_df: pd.DataFrame):
     )
 
     return fig
-
 
 def _hotspot_table(lane_df: pd.DataFrame):
     hs = lane_df[lane_df["carbon_hotspot"] == True].copy()  # noqa: E712
@@ -179,7 +181,11 @@ def main():
     with left:
         st.plotly_chart(_emissions_by_lane_bar(lane_df), use_container_width=True)
     with right:
-        st.plotly_chart(_carbon_intensity_heatmap(lane_df), use_container_width=True)
+        fig = _carbon_intensity_heatmap(lane_df)
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.write(lane_df.shape)
+    st.write(lane_df.head())
 
     st.subheader("Carbon Hotspot Alerts")
     hs = _hotspot_table(lane_df)

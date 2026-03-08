@@ -109,8 +109,8 @@ def generate_lane_insight(
                 provider="gemini"
             )
 
-        except Exception:
-            pass
+        except Exception as e:
+            print("Gemini failed:", e)
 
     return GenAIResponse(
         answer=_fallback_answer(user_query, lane_row),
