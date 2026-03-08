@@ -138,7 +138,7 @@ def _optimization_impact_chart(res):
 
 def _carbon_intensity_lane_chart(lane_df: pd.DataFrame):
 
-    df = lane_df.sort_values("carbon_intensity", ascending=False).head(15)
+    df = lane_df.sort_values("carbon_intensity", ascending=True).tail(15)
 
     fig = px.bar(
         df,
@@ -259,8 +259,8 @@ def main():
                 "percentage_reduction": round(res.percentage_reduction, 2),
             }
         )
-        fig = _optimization_impact_chart(res)
-        st.plotly_chart(fig, use_container_width=True)
+        # fig = _optimization_impact_chart(res)
+        # st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
     st.subheader("GenAI Assistant Chat")
