@@ -187,6 +187,9 @@ def main():
     st.write(lane_df.shape)
     st.write(lane_df.head())
 
+    st.write("Carbon intensity stats")
+    st.write(lane_df["carbon_intensity"].describe())
+
     st.subheader("Carbon Hotspot Alerts")
     hs = _hotspot_table(lane_df)
     if hs.empty:
